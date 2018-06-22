@@ -1,8 +1,10 @@
 package com.example.anthony.androidca;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.EditText;
+import android.widget.SimpleAdapter;
 
 import com.example.anthony.androidca.R;
 
@@ -12,11 +14,22 @@ public class BookDetailActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_detail);
 
-        Intent intent1=getIntent();
-        String ISBN=intent1.getStringExtra("ISBN");
-        BookModel book=BookModel.getBook(ISBN);
+        final Intent intent1=getIntent();
+        final String ISBN=intent1.getStringExtra("ISBN");
 
-        show(book);
+       // BookModel book=BookModel.getBook(ISBN);
+
+       // show(book);
+        new AsyncTask<Void, Void,BookModel>() {
+            @Override
+            protected BookModel doInBackground(Void... params) {
+                return BookModel.getBook(ISBN);
+            }
+            @Override
+            protected void onPostExecute(BookModel result) {
+                show(result);
+            }
+        }.execute();
 
     }
     void show(BookModel book)
