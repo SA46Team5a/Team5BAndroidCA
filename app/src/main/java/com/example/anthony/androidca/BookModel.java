@@ -11,18 +11,26 @@ import java.util.List;
 
 public class BookModel extends HashMap<String,Object> {
 
-    final static String baseURL = "http://172.27.240.226:8090/workhere/Service.svc/";
+    //final static String baseURL = "http://172.27.240.226:8090/workhere/Service.svc/";
 
-    public Employee(String name, String id, String address, String salary) {
-        put("Name", name);
-        put("Id", id);
-        put("Salary", salary);
-        put("Address", address);
+    public BookModel(Object ISBN,Object title, Object authorName, Object categoryName, Object price,Object discountedPrice,Object stockLevel,Object synopsis) {
+
+        put("ISBN", ISBN);
+        put("title", title);
+        put("authorName", authorName);
+        put("categoryName", categoryName);
+        put("price",price.toString());
+        put("discountedPrice",discountedPrice.toString());
+        put("stockLevel",stockLevel.toString());
+        put("synopsis",synopsis);
     }
+
+
+
 
     public static List<String> list() {
         List<String> list = new ArrayList<String>();
-        JSONArray a = JSONParser.getJSONArrayFromUrl(baseURL + "Employee");
+        JSONArray a = JSONParser.getJSONArrayFromUrl("@string/baseURL" + "Employee");
         try {
             for (int i =0; i<a.length(); i++)
                 list.add(a.getString(i));
@@ -32,13 +40,12 @@ public class BookModel extends HashMap<String,Object> {
         return(list);
     }
 
-    public static Employee getEmp(String eid) {
-        JSONObject b = JSONParser.getJSONFromUrl(baseURL + "employee/" + eid);
+    public static BookModel getBook(String ISBN) {
+        JSONObject b = JSONParser.getJSONFromUrl(baseURL + "Books/" + ISBN );
         try {
-            return new Employee(b.getString("Name"), b.getString("Id"),
-                    b.getString("Address"), b.getString("Salary"));
+            return new BookModel(b.get("ISBN"),b.get("title"),b.get("authorName"),b.get("categoryName"),b.get("price"),b.get("discountedPrice"),b.get("stockLevel"),b.get("synopsis"));
         } catch (Exception e) {
-            Log.e("Employee.getEmp()", "JSONArray error");
+            Log.e("BookModel.getBook()", "JSONArray error");
         }
         return(null);
     }

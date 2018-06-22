@@ -8,6 +8,6 @@
     <string name="discountedPrice">Discounted Price</string>
     <string name="stockLevel">Stock Level</string>
     <string name="synopsis">Synopsis</string>
-    <string name="baseURL"></string>
+    <string name="baseURL">http://localhost:52221/Endpoint/IBookService.svc/</string>
 
 </resources>
