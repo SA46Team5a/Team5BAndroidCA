@@ -30,12 +30,12 @@ public class BookModel extends HashMap<String,Object> {
 
     public static List<String> list() {
         List<String> list = new ArrayList<String>();
-        JSONArray a = JSONParser.getJSONArrayFromUrl("@string/baseURL" + "Employee");
+        JSONArray a = JSONParser.getJSONArrayFromUrl("@string/baseURL" + "Books");
         try {
             for (int i =0; i<a.length(); i++)
                 list.add(a.getString(i));
         } catch (Exception e) {
-            Log.e("Employee.list()", "JSONArray error");
+            Log.e("BookModel.list()", "JSONArray error");
         }
         return(list);
     }
