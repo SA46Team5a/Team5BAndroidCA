@@ -13,17 +13,18 @@ public class BookDetailActivity extends Activity {
         setContentView(R.layout.activity_book_detail);
         Intent i=getIntent();
         String ISBN=i.getStringExtra("ISBN");
-        BookModel book=book.getbook(ISBN);
+        BookModel book = BookModel.getBook(ISBN);
         show(book);
-        void show(BookModel book)
+
+    }
+    void show(BookModel book)
+    {
+        int[] ids={R.id.editText1,R.id.editText2,R.id.editText3,R.id.editText4,R.id.editText5,R.id.editText6,R.id.editText7,R.id.editText8};
+        String[] keys={"ISBN","title", "authorName","categoryName","price","discountedPrice","stockLevel","synopsis"};
+        for(int i=0;i<keys.length;i++)
         {
-            int[] ids={R.id.editText1,R.id.editText2,R.id.editText3,R.id.editText4,R.id.editText5,R.id.editText6,R.id.editText7,R.id.editText8};
-            String[] keys={"ISBN","title", "authorName","categoryName","price","discountedPrice","stockLevel","synopsis"};
-            for(int i=0;i<keys.length;i++)
-            {
-                EditText e=(EditText) findViewById(ids[i]);
-                e.setText(book.get(keys[i]));
-            }
+            EditText e=(EditText) findViewById(ids[i]);
+            e.setText(book.get(keys[i]).toString());
         }
     }
 }

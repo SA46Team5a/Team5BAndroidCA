@@ -41,12 +41,24 @@ public class BookModel extends HashMap<String,Object> {
     }
 
     public static BookModel getBook(String ISBN) {
-        JSONObject b = JSONParser.getJSONFromUrl(baseURL + "Books/" + ISBN );
+        JSONObject b = JSONParser.getJSONFromUrl("@string/baseURL" + "Books/" + ISBN );
         try {
             return new BookModel(b.get("ISBN"),b.get("title"),b.get("authorName"),b.get("categoryName"),b.get("price"),b.get("discountedPrice"),b.get("stockLevel"),b.get("synopsis"));
         } catch (Exception e) {
             Log.e("BookModel.getBook()", "JSONArray error");
         }
         return(null);
+    }
+
+    public List<String> searchBookByTitle(String searchCriteria){
+        List<String> allBooksISBN = list();
+        List<String> searchResult = new ArrayList<String>();
+        for (String isbn: allBooksISBN) {
+            BookModel book = getBook(isbn);
+            if((book.get("title").toString().toLowerCase()).contains(searchCriteria.toLowerCase())){
+                searchResult.add(book.get("ISBN").toString());
+            }
+        }
+        return searchResult;
     }
 }

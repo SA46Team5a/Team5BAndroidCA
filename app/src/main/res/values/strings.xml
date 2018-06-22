@@ -9,5 +9,8 @@
     <string name="stockLevel">Stock Level</string>
     <string name="synopsis">Synopsis</string>
     <string name="baseURL">http://localhost:52221/Endpoint/IBookService.svc/</string>
+    <string name="search">Search Books by Title</string>
+    <string name="btn_search_all_txt">All Books</string>
+    <string name="btn_search_txt">Search</string>
 
 </resources>
