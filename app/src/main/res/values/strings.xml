@@ -8,7 +8,7 @@
     <string name="discountedPrice">Discounted Price</string>
     <string name="stockLevel">Stock Level</string>
     <string name="synopsis">Synopsis</string>
-    <string name="baseURL">http://localhost:52221/Endpoint/IBookService.svc/</string>
+    <string name="baseURL">http://172.17.249.19/BookStore/Endpoint/IBookService.svc/</string>
     <string name="search">Search Books by Title</string>
     <string name="btn_search_all_txt">All Books</string>
     <string name="btn_search_txt">Search</string>

@@ -1,12 +1,12 @@
 package com.example.anthony.androidca;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
 
-public class BookDetailActivity extends Activity {
+import com.example.anthony.androidca.R;
 
+public class BookDetailActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,3 +30,4 @@ public class BookDetailActivity extends Activity {
         }
     }
 }
+
