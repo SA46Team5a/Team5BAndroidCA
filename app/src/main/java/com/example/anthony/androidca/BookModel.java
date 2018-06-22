@@ -33,8 +33,11 @@ public class BookModel extends HashMap<String,Object> {
         List<String> list = new ArrayList<String>();
         JSONArray a = JSONParser.getJSONArrayFromUrl(baseURL + "Books");
         try {
-            for (int i =0; i<a.length(); i++)
-                list.add(a.getString(i));
+            for (int i =0; i<a.length(); i++){
+                JSONObject b = a.getJSONObject(i);
+                list.add(b.get("ISBN").toString());
+            }
+
         } catch (Exception e) {
             Log.e("BookModel.list()", "JSONArray error");
         }

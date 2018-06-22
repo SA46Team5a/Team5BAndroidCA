@@ -23,9 +23,13 @@ public class ListOfBooksActivity extends ListActivity {
         Intent incomingIntent = getIntent();
         ArrayList<String> bookList = (ArrayList<String>) incomingIntent.getSerializableExtra("myClassList");
         List<String> books = BookModel.list();
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-//                android.R.layout.simple_list_item_1, books);
-        MyAdapter adapter = new MyAdapter(this, R.layout.listbooks, books);
+        List<BookModel> bookLists = new ArrayList<BookModel>();
+        for(String ISBN:books){
+            bookLists.add(BookModel.getBook(ISBN));
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, books);
+        //MyAdapter adapter = new MyAdapter(this, R.layout.listbooks, books);
         setListAdapter(adapter);
     }
 
