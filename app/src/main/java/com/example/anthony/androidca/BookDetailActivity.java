@@ -11,9 +11,11 @@ public class BookDetailActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_detail);
-        Intent i=getIntent();
-        String ISBN=i.getStringExtra("ISBN");
-        BookModel book = BookModel.getBook(ISBN);
+
+        Intent intent1=getIntent();
+        String ISBN=intent1.getStringExtra("ISBN");
+        BookModel book=BookModel.getBook(ISBN);
+
         show(book);
 
     }
