@@ -11,7 +11,8 @@ import java.util.List;
 
 public class BookModel extends HashMap<String,Object> {
 
-    //final static String baseURL = "http://172.27.240.226:8090/workhere/Service.svc/";
+
+    final static String baseURL = "http://172.17.249.19/BookStore/Endpoint/IBookService.svc/";
 
     public BookModel(Object ISBN,Object title, Object authorName, Object categoryName, Object price,Object discountedPrice,Object stockLevel,Object synopsis) {
 
@@ -30,7 +31,7 @@ public class BookModel extends HashMap<String,Object> {
 
     public static List<String> list() {
         List<String> list = new ArrayList<String>();
-        JSONArray a = JSONParser.getJSONArrayFromUrl("@string/baseURL" + "Books");
+        JSONArray a = JSONParser.getJSONArrayFromUrl(baseURL + "Books");
         try {
             for (int i =0; i<a.length(); i++)
                 list.add(a.getString(i));
@@ -41,7 +42,7 @@ public class BookModel extends HashMap<String,Object> {
     }
 
     public static BookModel getBook(String ISBN) {
-        JSONObject b = JSONParser.getJSONFromUrl("@string/baseURL" + "Books/" + ISBN );
+        JSONObject b = JSONParser.getJSONFromUrl(baseURL  + "Books/" + ISBN );
         try {
             return new BookModel(b.get("ISBN"),b.get("title"),b.get("authorName"),b.get("categoryName"),b.get("price"),b.get("discountedPrice"),b.get("stockLevel"),b.get("synopsis"));
         } catch (Exception e) {
@@ -50,7 +51,7 @@ public class BookModel extends HashMap<String,Object> {
         return(null);
     }
 
-    public List<String> searchBookByTitle(String searchCriteria){
+    public static List<String> searchBookByTitle(String searchCriteria){
         List<String> allBooksISBN = list();
         List<String> searchResult = new ArrayList<String>();
         for (String isbn: allBooksISBN) {

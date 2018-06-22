@@ -2,6 +2,7 @@ package com.example.anthony.androidca;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,16 +26,36 @@ public class SearchActivity extends Activity {
 
         searchText = findViewById(R.id.search_txt);
         searchBtn = findViewById(R.id.btn_search);
-        searchAllBtn=findViewById(R.id.btn_search_all);
+        searchAllBtn = findViewById(R.id.btn_search_all);
+
+        //final Context ctx = getApplicationContext();
 
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String searchCriteria = getSearchText();
-                //List<String> listOfISBN = searchBookByTitle(searchCriteria);
-                Intent i  = new Intent(SearchActivity.this,ListOfBooksActivity.class);
-                //i.putExtra("listOfISBNs",listOfISBN);
-                startActivity(i);
+                final String searchCriteria = getSearchText();
+
+                new AsyncTask<String,Void,List<String>>(){
+
+                    @Override
+                    protected List<String> doInBackground(String... strings) {
+                        if(searchCriteria==null){
+                            return BookModel.list();
+                        }
+                        else{
+                            return BookModel.searchBookByTitle(searchCriteria);
+                        }
+                    }
+
+                    @Override
+                    protected void onPostExecute(List<String> result) {
+                        Intent i  = new Intent(SearchActivity.this,ListOfBooksActivity.class);
+                        i.putExtra("listOfBooks",(ArrayList<String>)result);
+                        startActivity(i);
+                    }
+                }.execute();
+
+
             }
         });
 
@@ -42,25 +63,26 @@ public class SearchActivity extends Activity {
             @SuppressLint("StaticFieldLeak")
             @Override
             public void onClick(View view) {
-                new AsyncTask<Void,Void,List<String>>(){
+                new AsyncTask<String,Void,List<String>>(){
                     @Override
-                    protected List<String> doInBackground(Void... voids) {
-                        //ArrayList<String> allISBN = BookModel.listAllBooks();
-                        List<String> s = new ArrayList<String>();
-                        s.add("123456");
-                        //return allISBN;
-                        return s;
+                    protected List<String> doInBackground(String... strings) {
+
+                            return BookModel.list();
+
                     }
+
                     @Override
                     protected void onPostExecute(List<String> result) {
                         Intent i  = new Intent(SearchActivity.this,ListOfBooksActivity.class);
-                        //i.putExtra("listOfBooks",allISBN);
+                        i.putExtra("listOfBooks",(ArrayList<String>)result);
                         startActivity(i);
                     }
                 }.execute();
+
             }
         });
     }
+
 
     public String getSearchText(){
         return searchText.getText().toString();

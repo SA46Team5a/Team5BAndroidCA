@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ListOfBooksActivity extends ListActivity {
@@ -18,6 +19,9 @@ public class ListOfBooksActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_of_books);
         StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.LAX);
+
+        Intent incomingIntent = getIntent();
+        ArrayList<String> bookList = (ArrayList<String>) incomingIntent.getSerializableExtra("myClassList");
         List<String> books = BookModel.list();
 //        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 //                android.R.layout.simple_list_item_1, books);
