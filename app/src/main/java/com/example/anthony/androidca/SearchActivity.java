@@ -28,34 +28,28 @@ public class SearchActivity extends Activity {
         searchBtn = findViewById(R.id.btn_search);
         searchAllBtn = findViewById(R.id.btn_search_all);
 
-        //final Context ctx = getApplicationContext();
-
         searchBtn.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("StaticFieldLeak")
             @Override
             public void onClick(View view) {
-                final String searchCriteria = getSearchText();
-
-                new AsyncTask<String,Void,List<String>>(){
-
-                    @Override
-                    protected List<String> doInBackground(String... strings) {
-                        if(searchCriteria==null){
-                            return BookModel.list();
-                        }
-                        else{
-                            return BookModel.searchBookByTitle(searchCriteria);
-                        }
+            final String searchCriteria = getSearchText();
+            new AsyncTask<String,Void,List<String>>(){
+                @Override
+                protected List<String> doInBackground(String... strings) {
+                    if((searchCriteria==null || searchCriteria.equals(" ") )){
+                        return BookModel.list();
                     }
-
-                    @Override
-                    protected void onPostExecute(List<String> result) {
-                        Intent i  = new Intent(SearchActivity.this,ListOfBooksActivity.class);
-                        i.putExtra("listOfBooks",(ArrayList<String>)result);
-                        startActivity(i);
+                    else{
+                        return BookModel.searchBookByTitle(searchCriteria);
                     }
-                }.execute();
-
-
+                }
+                @Override
+                protected void onPostExecute(List<String> result) {
+                    Intent i  = new Intent(SearchActivity.this,ListOfBooksActivity.class);
+                    i.putExtra("listOfBooks",(ArrayList<String>)result);
+                    startActivity(i);
+                }
+            }.execute();
             }
         });
 
@@ -63,28 +57,26 @@ public class SearchActivity extends Activity {
             @SuppressLint("StaticFieldLeak")
             @Override
             public void onClick(View view) {
-                new AsyncTask<String,Void,List<String>>(){
-                    @Override
-                    protected List<String> doInBackground(String... strings) {
-
-                            return BookModel.list();
-
-                    }
-
-                    @Override
-                    protected void onPostExecute(List<String> result) {
-                        Intent i  = new Intent(SearchActivity.this,ListOfBooksActivity.class);
-                        i.putExtra("listOfBooks",(ArrayList<String>)result);
-                        startActivity(i);
-                    }
-                }.execute();
+            new AsyncTask<Void,Void,List<String>>(){
+                @Override
+                protected List<String> doInBackground(Void... voids) {
+                    return BookModel.list();
+                }
+                @Override
+                protected void onPostExecute(List<String> result) {
+                    Intent i  = new Intent(SearchActivity.this,ListOfBooksActivity.class);
+                    i.putExtra("listOfBooks",(ArrayList<String>)result);
+                    startActivity(i);
+                }
+            }.execute();
 
             }
         });
-    }
 
+    }
 
     public String getSearchText(){
         return searchText.getText().toString();
     }
+
 }

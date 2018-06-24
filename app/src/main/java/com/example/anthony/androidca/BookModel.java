@@ -6,7 +6,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 public class BookModel extends HashMap<String,Object> {
@@ -25,8 +27,6 @@ public class BookModel extends HashMap<String,Object> {
         put("stockLevel",stockLevel.toString());
         put("synopsis",synopsis);
     }
-
-
 
 
     public static List<String> list() {
@@ -54,16 +54,63 @@ public class BookModel extends HashMap<String,Object> {
         return(null);
     }
 
-    public static List<String> searchBookByTitle(String searchCriteria){
+    public static List<String> searchBookByTitle(final String searchCriteria){
         List<String> allBooksISBN = list();
-        List<String> searchResult = new ArrayList<String>();
-        for (String isbn: allBooksISBN) {
+
+        final List<String> searchResult = new ArrayList<String>();
+        final List<String> searchWords = getIndividualSearchWords(searchCriteria);
+
+        for (final String isbn: allBooksISBN) {
+
             BookModel book = getBook(isbn);
-            if((book.get("title").toString().toLowerCase()).contains(searchCriteria.toLowerCase())){
+
+            if(BookModel.hasMatchingString(book, searchCriteria)){
                 searchResult.add(book.get("ISBN").toString());
             }
+            else{
+                if(BookModel.hasMatchingWords(book,searchWords)&& !resultsContain(searchResult,book))
+                    searchResult.add(book.get("ISBN").toString());
+            }
+
         }
         return searchResult;
+    }
+
+    private static List<String> getIndividualSearchWords(String searchCriteria) {
+        List<String> searchWords = new ArrayList<String>(Arrays.asList(searchCriteria.toLowerCase().split("\\s+|[,.-<>]")));
+        List<String> omittedWords = Arrays.asList("the","and","a","of","to");
+
+        Iterator<String> i = searchWords.iterator();
+        while(i.hasNext()){
+            String s = i.next();
+            for (String omittedWord:omittedWords) {
+                if(s.equals(omittedWord))
+                    i.remove();
+            }
+        }
+        return searchWords;
+    }
+
+    private static boolean hasMatchingString(BookModel book, String s) {
+        return (book.get("title").toString().toLowerCase()).contains(s.trim().toLowerCase());
+    }
+
+    private static boolean hasMatchingWords(BookModel book,List<String> searchWords){
+        for(String words : searchWords){
+            if(hasMatchingString(book, words) ){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean resultsContain(final List<String> searchResultsWithISBN, final BookModel book){
+        for(String ISBN: searchResultsWithISBN){
+            BookModel bookInResult = getBook(ISBN);
+            if(bookInResult.get("title").equals(book.get("title")))
+                return true;
+        }
+        return false;
     }
 }
 
