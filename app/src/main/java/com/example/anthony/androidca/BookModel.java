@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -57,6 +58,8 @@ public class BookModel extends HashMap<String,Object> {
     public static List<String> searchBookByTitle(final String searchCriteria){
         List<String> allBooksISBN = list();
 
+        List<BookModel> unsortedSearchResult = new ArrayList<BookModel>();
+
         final List<String> searchResult = new ArrayList<String>();
         final List<String> searchWords = getIndividualSearchWords(searchCriteria);
 
@@ -68,10 +71,19 @@ public class BookModel extends HashMap<String,Object> {
                 searchResult.add(book.get("ISBN").toString());
             }
             else{
-                if(BookModel.hasMatchingWords(book,searchWords)&& !resultsContain(searchResult,book))
-                    searchResult.add(book.get("ISBN").toString());
+                if((BookModel.hasMatchingWords(book,searchWords)> 0)&& !resultsContain(searchResult,book)){
+                    book.put("matches",BookModel.hasMatchingWords(book,searchWords));
+                    unsortedSearchResult.add(book);
+                }
+
             }
 
+        }
+        if(searchResult.size()>0){
+            Collections.sort(unsortedSearchResult, new SearchComparator());
+            for(BookModel b : unsortedSearchResult){
+                searchResult.add(b.get("ISBN").toString());
+            }
         }
         return searchResult;
     }
@@ -95,13 +107,14 @@ public class BookModel extends HashMap<String,Object> {
         return (book.get("title").toString().toLowerCase()).contains(s.trim().toLowerCase());
     }
 
-    private static boolean hasMatchingWords(BookModel book,List<String> searchWords){
+    private static int hasMatchingWords(BookModel book,List<String> searchWords){
+        int matchOcurrences = 0;
         for(String words : searchWords){
             if(hasMatchingString(book, words) ){
-                return true;
+                matchOcurrences++;
             }
         }
-        return false;
+        return matchOcurrences;
     }
 
     public static boolean resultsContain(final List<String> searchResultsWithISBN, final BookModel book){
@@ -111,6 +124,21 @@ public class BookModel extends HashMap<String,Object> {
                 return true;
         }
         return false;
+    }
+
+    public static class SearchComparator implements java.util.Comparator<BookModel>{
+        @Override
+        public int compare(BookModel b1, BookModel b2) {
+            int numOfb1matches = (int)b1.get("matches");
+            int numOfb2matches = (int)b2.get("matches");
+
+            if(numOfb1matches == numOfb2matches)
+                return 0;
+            else if(numOfb1matches > numOfb2matches)
+                return 1;
+            else
+                return -1;
+        }
     }
 }
 
